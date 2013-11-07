@@ -29,9 +29,10 @@ columns_max_length = clean.transpose.map {    # now we've got columns!
 
 clean.each { |row|
   row.each_index { |index|
-    column_width = columns_max_length[index]
-    word_length = row[index].length
-    print "|  #{row[index]}#{' ' * (column_width - word_length)} "
+    print "#{row[index]}#{' ' * (columns_max_length[index] - row[index].length)}"
+    print " | " if row[index] != row[-1]      # put pipes only between columns, not at the beginning/end of rows
   }
-  print " |\n"
+  print "\n"
 }
+
+# TODO: format using sprintf()
