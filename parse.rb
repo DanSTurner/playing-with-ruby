@@ -3,7 +3,7 @@ require 'csv'
 file = File.read('data.csv')
 data = CSV.parse(file)
 
-clean = data.slice((4..224))
+clean = data.slice((4..208))
 
 puts "HEADERS!"
 
@@ -38,13 +38,24 @@ def update_max_widths_per_row(row, cell_widths)
 end
 
 #third attempt
-(0...clean[0].length).map { |col| clean.map{ |row| row[col] ? row[col].length : 0 }.max }
+# (0...clean[0].length).map { |col| clean.map{ |row| row[col] ? row[col].length : 0 }.max }
+def collect_cell_widths(clean)
+  cell_widths = []
+  cell_widths << clean.max_lengths
+end
+# [for each column] uses the max_word_length_for_col to return the maximum word length integer
 
-# for each column uses the max_word_length_for_col to return the integer
-(0...clean[0].length).map { |col| max_word_length_for_col(col) }
+# (0...clean[0].length) | a range from 0 to (clean[0] is the first row array, length of that is how many entries in the array)
+# which is the number of columns in the first row
 
-# returns the max length for each cell in a column
-def max_word_length_for_col(col)
-  clean.map { |row| row[col] ? row[col].length : 0 }.max
+# .map does: for each of that range (0 to the highest column) get the character count for the data (the string) in that column
+def max_lengths(clean)
+  (0...clean[0].length).map { |cell| max_word_length_for_cell(cell) }
+end
+# returns the max length for the cells in a column
+
+# does this by looking through a specific column in all rows, gets the length of everything in that column, then returns the max it found
+def max_word_length_for_col(cell)
+  clean.map { |row| row[cell] ? row[cell].length : 0 }.max
 end
 
